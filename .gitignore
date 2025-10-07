@@ -1,0 +1,52 @@
+### .NET Core ###
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
+appsettings.Development.json
+
+# Visual Studio Code
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Build results
+/Backend/**/bin/
+/Backend/**/obj/
+
+# EF Migrations (optional, uncomment if you prefer to ignore generated migrations)
+# /Backend/**/Migrations/
+
+### Angular / Node ###
+node_modules/
+dist/
+tmp/
+.cache/
+.angular/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Environment files
+**/src/environments/environment.ts
+**/src/environments/environment.prod.ts
+
+### OS generated ###
+.DS_Store
+Thumbs.db
+
+### Others ###
+*.bak
+*.tmp
+*.swp
