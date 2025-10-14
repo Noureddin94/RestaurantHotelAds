@@ -19,4 +19,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+    <ItemGroup>
+	    <ProjectReference Include="..\RestaurantHotelAds.Core\RestaurantHotelAds.Core.csproj" />
+    </ItemGroup>
+
 </Project>
