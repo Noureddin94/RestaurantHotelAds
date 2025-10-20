@@ -1,4 +1,43 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using RestaurantHotelAds.Application.Services;
+using RestaurantHotelAds.Core.Interfaces;
+using RestaurantHotelAds.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container
+builder.Services.AddControllers();
+
+// ============================================================
+// DATABASE CONFIGURATION
+// ============================================================
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.MigrationsAssembly("RestaurantHotelAds.Infrastructure");
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null
+            );
+        }
+    );
+
+    // Enable detailed errors in development
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
+
+// Register Unit of Work and Services
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IHotelService, HotelService>();
 
 
 builder.Services.AddCors(options =>
@@ -16,13 +55,45 @@ builder.Services.AddCors(options =>
     });
 }
 );
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// ============================================================
+// DATABASE INITIALIZATION & SEEDING
+// ============================================================
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+
+        // Apply migrations automatically
+        logger.LogInformation("Applying database migrations...");
+        context.Database.Migrate();
+
+        // Seed data
+        logger.LogInformation("Seeding database...");
+        await DatabaseSeeder.SeedAsync(context, logger);
+
+        logger.LogInformation("Database initialization completed successfully!");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while initializing the database.");
+        // Don't throw in production - let app start even if seeding fails
+        if (app.Environment.IsDevelopment())
+        {
+            throw;
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,7 +102,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
 
 var summaries = new[]
 {
@@ -61,6 +132,16 @@ app.MapGet("/weatherforecast", () =>
 //    }
 //});
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    Console.WriteLine($"Connected to: {context.Database.GetDbConnection().Database}");
+}
+
+app.UseHttpsRedirection();
+app.UseCors("AllowAngular");
+app.UseAuthorization();
+app.MapControllers();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
