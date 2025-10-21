@@ -35,7 +35,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
 
                 // Save all changes
                 await context.SaveChangesAsync();
-                logger.LogInformation("✅ Database seeding completed successfully!");
+                logger.LogInformation("Database seeding completed successfully!");
             }
             catch (Exception ex)
             {
@@ -108,10 +108,10 @@ namespace RestaurantHotelAds.Infrastructure.Data
             context.Users.AddRange(users);
             await context.SaveChangesAsync();
 
-            logger.LogInformation($"✅ Seeded {users.Count} users");
-            logger.LogInformation("📧 Admin Email: admin@restauranthotelads.com | Password: Admin@123");
-            logger.LogInformation("📧 Hotel Owner: hotelowner@test.com | Password: Hotel@123");
-            logger.LogInformation("📧 Restaurant: restaurant@test.com | Password: Restaurant@123");
+            logger.LogInformation($"Seeded {users.Count} users");
+            logger.LogInformation("Admin Email: admin@restauranthotelads.com | Password: Admin@123");
+            logger.LogInformation("Hotel Owner: hotelowner@test.com | Password: Hotel@123");
+            logger.LogInformation("Restaurant: restaurant@test.com | Password: Restaurant@123");
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
             context.Hotels.AddRange(hotels);
             await context.SaveChangesAsync();
 
-            logger.LogInformation($"✅ Seeded {hotels.Count} hotels");
+            logger.LogInformation($"Seeded {hotels.Count} hotels");
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
             context.Rooms.AddRange(rooms);
             await context.SaveChangesAsync();
 
-            logger.LogInformation($"✅ Seeded {rooms.Count} rooms across all hotels");
+            logger.LogInformation($"Seeded {rooms.Count} rooms across all hotels");
         }
     }
 }
