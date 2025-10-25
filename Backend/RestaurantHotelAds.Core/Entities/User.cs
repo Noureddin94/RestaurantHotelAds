@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Identity;
 namespace RestaurantHotelAds.Core.Entities
 {
-    public class User
+    public class User : IdentityUser<int>
     {
         public int Id { get; set; }
 
@@ -20,6 +20,7 @@ namespace RestaurantHotelAds.Core.Entities
 
         [Required]
         [StringLength(50)]
+        // TODO: Using an enum for roles 
         public string Role { get; set; } = string.Empty; // "HotelOwner", "Restaurant"
 
         [StringLength(100)]
