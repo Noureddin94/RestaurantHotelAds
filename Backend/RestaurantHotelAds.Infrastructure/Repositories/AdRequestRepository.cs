@@ -10,52 +10,52 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Infrastructure.Repositories
 {
-    public class AdRequestRepository : IAdRequestRepository
+    public class AdRequestRepository : BaseRepository<AdRequest>, IAdRequestRepository
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public AdRequestRepository(ApplicationDbContext context)
+        public AdRequestRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            //_context = context;
         }
-        public async Task<AdRequest> AddAsync(AdRequest adRequest)
-        {
-            _context.AdRequests.Add(adRequest);
-            await _context.SaveChangesAsync();
-            return adRequest;
-        }
+        //public async Task<AdRequest> AddAsync(AdRequest adRequest)
+        //{
+        //    _context.AdRequests.Add(adRequest);
+        //    await _context.SaveChangesAsync();
+        //    return adRequest;
+        //}
 
-        public async Task<IEnumerable<AdRequest>> GetByHotelIdAsync(int hotelId)
-        {
-            return await _context.AdRequests
-                .Where(ar => ar.HotelId == hotelId)
-                .ToListAsync();
-        }
-
-        public async Task<AdRequest?> GetByIdAsync(int id)
-        {
-            return await _context.AdRequests
-                .FirstOrDefaultAsync(ar => ar.Id == id);
-        }
-
-        public async Task<IEnumerable<AdRequest>> GetPendingByHotelIdAsync(int hotelId)
+        public async Task<IEnumerable<AdRequest>> GetByHotelIdAsync(Guid hotelId)
         {
             return await _context.AdRequests
                 .Where(ar => ar.HotelId == hotelId)
                 .ToListAsync();
         }
 
-        public async Task<int> GetPendingCountAsync(int hotelId)
+        //public async Task<AdRequest?> GetByIdAsync(Guid id)
+        //{
+        //    return await _context.AdRequests
+        //        .FirstOrDefaultAsync(ar => ar.Id == id);
+        //}
+
+        public async Task<IEnumerable<AdRequest>> GetPendingByHotelIdAsync(Guid hotelId)
+        {
+            return await _context.AdRequests
+                .Where(ar => ar.HotelId == hotelId)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetPendingCountAsync(Guid hotelId)
         {
             return await _context.AdRequests
                 .Where(ar => ar.HotelId == hotelId && ar.Status == "Pending")
                 .CountAsync();
         }
 
-        public Task<AdRequest> UpdateAsync(AdRequest adRequest)
-        {
-            _context.AdRequests.Update(adRequest);
-            return Task.FromResult(adRequest);
-        }
+        //public Task<AdRequest> UpdateAsync(AdRequest adRequest)
+        //{
+        //    _context.AdRequests.Update(adRequest);
+        //    return Task.FromResult(adRequest);
+        //}
     }
 }

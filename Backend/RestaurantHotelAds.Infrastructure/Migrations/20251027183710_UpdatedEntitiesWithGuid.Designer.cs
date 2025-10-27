@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantHotelAds.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RestaurantHotelAds.Infrastructure.Data;
 namespace RestaurantHotelAds.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027183710_UpdatedEntitiesWithGuid")]
+    partial class UpdatedEntitiesWithGuid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,6 +336,11 @@ namespace RestaurantHotelAds.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -399,9 +407,14 @@ namespace RestaurantHotelAds.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Hotels");
                 });
@@ -452,9 +465,14 @@ namespace RestaurantHotelAds.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Restaurants");
                 });
@@ -640,10 +658,16 @@ namespace RestaurantHotelAds.Infrastructure.Migrations
 
             modelBuilder.Entity("RestaurantHotelAds.Core.Entities.Hotel", b =>
                 {
-                    b.HasOne("RestaurantHotelAds.Core.Entities.ApplicationUser", "User")
+                    b.HasOne("RestaurantHotelAds.Core.Entities.ApplicationUser", null)
                         .WithMany("Hotels")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RestaurantHotelAds.Core.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -651,10 +675,16 @@ namespace RestaurantHotelAds.Infrastructure.Migrations
 
             modelBuilder.Entity("RestaurantHotelAds.Core.Entities.Restaurant", b =>
                 {
-                    b.HasOne("RestaurantHotelAds.Core.Entities.ApplicationUser", "User")
+                    b.HasOne("RestaurantHotelAds.Core.Entities.ApplicationUser", null)
                         .WithMany("Restaurants")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RestaurantHotelAds.Core.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");

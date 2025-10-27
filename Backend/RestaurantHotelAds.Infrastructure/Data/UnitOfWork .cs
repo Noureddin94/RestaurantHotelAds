@@ -22,7 +22,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
             Rooms = new RoomRepository(_context);
             AdRequests = new AdRequestRepository(_context);
             RoomAdvertisements = new RoomAdvertisementRepository(_context);
-            Users = new UserRepository(_context);
+            Users = new ApplicationUserRepository(_context);
             Restaurants = new RestaurantRepository(_context);
             Advertisements = new AdvertisementRepository(_context);
         }
@@ -31,7 +31,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
         public IRoomRepository Rooms { get; private set; }
         public IAdRequestRepository AdRequests { get; private set; }
         public IRoomAdvertisementRepository RoomAdvertisements { get; private set; }
-        public IUserRepository Users { get; private set; }
+        public IApplicationUserRepository Users { get; private set; }
         public IRestaurantRepository Restaurants { get; private set; }
         public IAdvertisementRepository Advertisements { get; private set; }
 
@@ -69,6 +69,11 @@ namespace RestaurantHotelAds.Infrastructure.Data
         {
             _transaction?.Dispose();
             _context.Dispose();
+        }
+
+        public IRepository<T> GetRepository<T>() where T : BaseEntity
+        {
+            return new BaseRepository<T>(_context);
         }
     }
 }

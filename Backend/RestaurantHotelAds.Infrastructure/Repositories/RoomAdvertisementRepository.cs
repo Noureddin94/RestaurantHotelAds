@@ -1,4 +1,5 @@
-﻿using RestaurantHotelAds.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantHotelAds.Core.Entities;
 using RestaurantHotelAds.Core.Interfaces;
 using RestaurantHotelAds.Infrastructure.Data;
 using System;
@@ -9,28 +10,46 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Infrastructure.Repositories
 {
-    public class RoomAdvertisementRepository : IRoomAdvertisementRepository
+    public class RoomAdvertisementRepository : BaseRepository<RoomAdvertisement>, IRoomAdvertisementRepository
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public RoomAdvertisementRepository(ApplicationDbContext context)
+        public RoomAdvertisementRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            //_context = context;
+        }
+        public async Task<IEnumerable<RoomAdvertisement>> GetByRoomIdAsync(Guid roomId)
+        {
+            return await _context.RoomAdvertisements
+                .Include(ra => ra.AdRequest)
+                .Where(ra => ra.RoomId == roomId && !ra.IsDeleted)
+                .ToListAsync();
         }
 
-        public Task<RoomAdvertisement> AddAsync(RoomAdvertisement roomAd)
+        public async Task<IEnumerable<RoomAdvertisement>> GetByAdRequestIdAsync(Guid adRequestId)
         {
-            throw new NotImplementedException();
+            return await _context.RoomAdvertisements
+                .Include(ra => ra.Room)
+                .Where(ra => ra.AdRequestId == adRequestId && !ra.IsDeleted)
+                .ToListAsync();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteByAdRequestIdAsync(Guid adRequestId)
         {
-            throw new NotImplementedException();
-        }
+            var roomAds = await _context.RoomAdvertisements
+                .Where(ra => ra.AdRequestId == adRequestId && !ra.IsDeleted)
+                .ToListAsync();
 
-        public Task<bool> DeleteByAdRequestIdAsync(int adRequestId)
-        {
-            throw new NotImplementedException();
+            if (!roomAds.Any()) return false;
+
+            foreach (var roomAd in roomAds)
+            {
+                roomAd.IsDeleted = true;
+                roomAd.DeletedAt = DateTime.UtcNow;
+            }
+                _context.RoomAdvertisements.UpdateRange(roomAds);
+                await _context.SaveChangesAsync();
+                return true;
         }
 
         public Task<IEnumerable<RoomAdvertisement>> GetByAdRequestIdAsync(int adRequestId)
@@ -38,9 +57,12 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<RoomAdvertisement>> GetByRoomIdAsync(int roomId)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<IEnumerable<RoomAdvertisement>> GetByRoomIdAsync(Guid roomId)
+        //{
+        //    var roomAds = await _context.RoomAdvertisements
+        //        .Where(ra => ra.RoomId == roomId && !ra.IsDeleted)
+        //        .ToListAsync();
+        //    return roomAds;
+        //}
     }
 }
