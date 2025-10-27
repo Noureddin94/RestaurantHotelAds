@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Application.Services.AdvertisementsServices
 {
-    internal class IAdvertisementsService
+    public class IAdvertisementsService
     {
+
     }
 }
