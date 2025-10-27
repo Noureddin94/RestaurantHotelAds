@@ -10,7 +10,10 @@ namespace RestaurantHotelAds.Core.Enums
     {
         Admin = 1,
         HotelOwner = 2,
-        Restaurant = 3
+        Restaurant = 3,
+        staff = 4,
+        customer = 5,
+        Guest = 6
     }
 
     /// <summary>

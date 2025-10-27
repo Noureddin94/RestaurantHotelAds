@@ -5,28 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantHotelAds.Core.Entities
+namespace RestaurantHotelAds.Application.DTOs.HotelDtos
 {
-    public class Restaurant : BaseEntity
+    public class UpdateHotelDto
     {
-        [Required]
-        [StringLength(200)]
+        [Required(ErrorMessage = "Hotel name is required")]
+        [StringLength(200, MinimumLength = 3)]
         public string Name { get; set; } = string.Empty;
+
         [StringLength(500)]
         public string? Description { get; set; }
-        [Required]
-        [StringLength(300)]
+
+        [Required(ErrorMessage = "Address is required")]
+        [StringLength(300, MinimumLength = 5)]
         public string Address { get; set; } = string.Empty;
+
         [Phone]
         public string? ContactPhone { get; set; }
+
         [EmailAddress]
         public string? ContactEmail { get; set; }
-        public bool IsActive { get; set; } = true;
 
-        // Foreign Key to ApplicationUser
-        public Guid UserId { get; set; }
-        public virtual ApplicationUser User { get; set; } = null!;
+        [Range(1, 10000)]
+        public int TotalRooms { get; set; }
 
-        public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
+        public bool IsActive { get; set; }
     }
 }

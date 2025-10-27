@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Entities
 {
-    public class AdRequest
+    public class AdRequest : BaseEntity
     {
-        public int Id { get; set; }
-        public int AdvertisementId { get; set; }
-        public int HotelId { get; set; }
+        public Guid AdvertisementId { get; set; }
+        public Guid HotelId { get; set; }
         public string Status { get; set; } = "Pending"; // Pending, Approved, Rejected
         public string? ReviewNotes { get; set; }
         public DateTime RequestedAt { get; set; } = DateTime.UtcNow;

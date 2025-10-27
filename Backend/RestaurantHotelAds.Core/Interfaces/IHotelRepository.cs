@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Interfaces
 {
-    public interface IHotelRepository
+    public interface IHotelRepository : IRepository<Hotel>
     {
-        Task<IEnumerable<Hotel>> GetAllByUserIdAsync(int userId);
-        Task<Hotel?> GetByIdAsync(int id);
-        Task<Hotel?> GetByIdAndUserIdAsync(int id, int userId);
-        Task<Hotel> AddAsync(Hotel hotel);
-        Task<Hotel> UpdateAsync(Hotel hotel);
-        Task<bool> DeleteAsync(int id);
-        Task<bool> ExistsAsync(int id);
+        Task<IEnumerable<Hotel>> GetAllByUserIdAsync(Guid userUuid);
+        Task<Hotel?> GetByIdWithRoomsAsync(Guid id);
+        Task<Hotel?> GetByIdAndUserIdAsync(Guid id, Guid userUuid);
+        Task<int> DeleteAllByUserIdAsync(Guid userUuid);
+        Task<bool> DeleteAllAsync();
+
+        //Task<Hotel?> GetByIdAsync(Guid id);
+        //Task<Hotel> AddAsync(Hotel hotel);
+        //Task<Hotel> UpdateAsync(Hotel hotel);
+        //Task<bool> DeleteAsync(Guid id);
+        //Task<bool> ExistsAsync(Guid id);
     }
 }

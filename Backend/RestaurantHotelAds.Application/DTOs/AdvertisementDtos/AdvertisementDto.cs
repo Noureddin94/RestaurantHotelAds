@@ -1,16 +1,19 @@
-﻿using System;
+﻿using RestaurantHotelAds.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantHotelAds.Core.Entities
+namespace RestaurantHotelAds.Application.DTOs.AdvertisementDtos
 {
-    public class Advertisement : BaseEntity
+    public class AdvertisementDto
     {
-        [Required]
         public Guid RestaurantId { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string RestaurantName { get; set; } = string.Empty;
         [Required]
         [StringLength(200)]
         public string Title { get; set; } = string.Empty;
@@ -18,6 +21,7 @@ namespace RestaurantHotelAds.Core.Entities
         public string? Description { get; set; }
         [StringLength(500)]
         public string? MediaUrl { get; set; }
+        public int RequestsCount { get; set;}
         [StringLength(50)]
         public string MediaType { get; set; } = "Image"; // Image, Video
         public DateTime? StartDate { get; set; }

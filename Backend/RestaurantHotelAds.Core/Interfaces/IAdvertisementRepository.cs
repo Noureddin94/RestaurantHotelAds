@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Interfaces
 {
-    public interface IAdvertisementRepository
+    public interface IAdvertisementRepository : IRepository<Advertisement>
     {
-        Task<Advertisement?> GetByIdAsync(int id);
-        Task<Advertisement> AddAsync(Advertisement advertisement);
-        Task<Advertisement> UpdateAsync(Advertisement advertisement);
+        //Task<IEnumerable<Advertisement>> GetAllAsync();
+        Task<IEnumerable<Advertisement>> GetByRestaurantIdAsync(Guid restaurantId);
+        Task<Advertisement?> GetByIdWithRestaurantAsync(Guid id);
+        //Task<Advertisement> AddAsync(Advertisement advertisement);
+        //Task<Advertisement> UpdateAsync(Advertisement advertisement);
+        //Task<bool> DeleteAsync(Guid id);
     }
 }

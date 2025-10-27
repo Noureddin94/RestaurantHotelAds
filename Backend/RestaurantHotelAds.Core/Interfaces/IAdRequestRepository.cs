@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Interfaces
 {
-    public interface IAdRequestRepository
+    public interface IAdRequestRepository : IRepository<AdRequest>
     {
-        Task<IEnumerable<AdRequest>> GetByHotelIdAsync(int hotelId);
-        Task<IEnumerable<AdRequest>> GetPendingByHotelIdAsync(int hotelId);
-        Task<AdRequest?> GetByIdAsync(int id);
-        Task<AdRequest> AddAsync(AdRequest adRequest);
-        Task<AdRequest> UpdateAsync(AdRequest adRequest);
-        Task<int> GetPendingCountAsync(int hotelId);
+        Task<IEnumerable<AdRequest>> GetByHotelIdAsync(Guid hotelId);
+        Task<IEnumerable<AdRequest>> GetPendingByHotelIdAsync(Guid hotelId);
+        //Task<AdRequest?> GetByIdAsync(Guid id);
+        //Task<AdRequest> AddAsync(AdRequest adRequest);
+        //Task<AdRequest> UpdateAsync(AdRequest adRequest);
+        Task<int> GetPendingCountAsync(Guid hotelId);
     }
 }

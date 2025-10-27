@@ -1,6 +1,9 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RestaurantHotelAds.Application.Services;
+using RestaurantHotelAds.Application.Mappings;
+using RestaurantHotelAds.Application.Services.HotelsServices;
 using RestaurantHotelAds.Core.Interfaces;
 using RestaurantHotelAds.Infrastructure.Data;
 
@@ -35,9 +38,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     }
 });
 
-// Register Unit of Work and Services
+// Register Unit of Work, Services, Mappings and Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MappingProfile>(); });
+
+// Register repositories
+builder.Services.AddScoped(typeof(IRepository<>), typeof(RestaurantHotelAds.Infrastructure.Repositories.BaseRepository<>));
+builder.Services.AddScoped<IRoomRepository, RestaurantHotelAds.Infrastructure.Repositories.RoomRepository>();
+builder.Services.AddScoped<IHotelRepository, RestaurantHotelAds.Infrastructure.Repositories.HotelRepository>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantHotelAds.Infrastructure.Repositories.RestaurantRepository>();
+builder.Services.AddScoped<IAdvertisementRepository, RestaurantHotelAds.Infrastructure.Repositories.AdvertisementRepository>();
+builder.Services.AddScoped<IRoomAdvertisementRepository, RestaurantHotelAds.Infrastructure.Repositories.RoomAdvertisementRepository>();
+
 
 
 builder.Services.AddCors(options =>

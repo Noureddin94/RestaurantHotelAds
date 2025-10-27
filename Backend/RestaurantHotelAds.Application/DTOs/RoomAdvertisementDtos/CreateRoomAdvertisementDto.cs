@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantHotelAds.Core.Entities
+namespace RestaurantHotelAds.Application.DTOs.RoomAdvertisementDtos
 {
-    public class Room : BaseEntity
+    public class CreateRoomAdvertisementDto
     {
-        [Required]
-        public Guid HotelId { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Room number is required")]
         [StringLength(50)]
         public string RoomNumber { get; set; } = string.Empty;
 
@@ -24,11 +21,5 @@ namespace RestaurantHotelAds.Core.Entities
 
         [StringLength(200)]
         public string? DisplayDeviceId { get; set; }
-
-        public bool IsActive { get; set; } = true;
-
-        // Navigation properties
-        public virtual Hotel Hotel { get; set; } = null!;
-        public virtual ICollection<RoomAdvertisement> RoomAdvertisements { get; set; } = new List<RoomAdvertisement>();
     }
 }
