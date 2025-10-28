@@ -27,7 +27,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./RestaurantHotelAds.sln
 
-      # Build only backend
+      # Install EF Core CLI tools globally
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef
+
+      # Add .NET global tools to PATH (important!)
+      - name: Add .NET tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
       - name: Build backend
         run: dotnet build ./RestaurantHotelAds.sln --configuration Release --no-restore
 
