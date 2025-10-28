@@ -28,6 +28,19 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Restaurant?> GetByIdAndUserIdAsync(Guid id, Guid userId)
+        {
+            return await _context.Restaurants
+                .Include(r => r.Advertisements)
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+        }
+
+        public async Task<bool> ExistsByNameAsync(Guid userId, string name)
+        {
+            return await _context.Restaurants
+                .AnyAsync(r => r.UserId == userId && r.Name.ToLower() == name.ToLower());
+        }
+
         //public async Task<Restaurant?> GetByIdAsync(Guid id)
         //{
         //    return await _context.Restaurants.FindAsync(id);
@@ -54,7 +67,7 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
 
         //    restaurant.IsDeleted = true;
         //    restaurant.DeletedAt = DateTime.UtcNow;
-            
+
         //    //_context.Restaurants.Remove(restaurant);
         //    await _context.SaveChangesAsync();
         //    return true;

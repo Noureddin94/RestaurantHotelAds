@@ -13,7 +13,7 @@ namespace RestaurantHotelAds.Core.Interfaces
         IRoomRepository Rooms { get; }
         IRoomAdvertisementRepository RoomAdvertisements { get; }
         IAdRequestRepository AdRequests { get; }
-
+        IRestaurantRepository Restaurants { get; }
         IRepository<T> GetRepository<T>() where T : BaseEntity;
 
         Task<int> SaveChangesAsync();
