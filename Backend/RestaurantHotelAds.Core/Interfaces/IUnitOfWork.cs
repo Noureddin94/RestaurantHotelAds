@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RestaurantHotelAds.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,8 @@ namespace RestaurantHotelAds.Core.Interfaces
         IRoomRepository Rooms { get; }
         IRoomAdvertisementRepository RoomAdvertisements { get; }
         IAdRequestRepository AdRequests { get; }
-
-        
+        IRestaurantRepository Restaurants { get; }
+        IRepository<T> GetRepository<T>() where T : BaseEntity;
 
         Task<int> SaveChangesAsync();
         Task BeginTransactionAsync();

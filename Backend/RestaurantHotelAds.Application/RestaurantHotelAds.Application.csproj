@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RestaurantHotelAds.Core\RestaurantHotelAds.Core.csproj" />
     <ProjectReference Include="..\RestaurantHotelAds.Infrastructure\RestaurantHotelAds.Infrastructure.csproj" />
   </ItemGroup>

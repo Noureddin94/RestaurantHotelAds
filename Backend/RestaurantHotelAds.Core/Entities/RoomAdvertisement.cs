@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Entities
 {
-    public class RoomAdvertisement
+    public class RoomAdvertisement : BaseEntity
     {
-        public int Id { get; set; }
-        public int AdRequestId { get; set; }
-        public int RoomId { get; set; }
+        public Guid AdRequestId { get; set; }
+        public Guid RoomId { get; set; }
         public int DisplayOrder { get; set; } = 1;
         public int DurationSeconds { get; set; } = 10;
         public bool IsActive { get; set; } = true;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestaurantHotelAds.Application.DTOs
+namespace RestaurantHotelAds.Application.DTOs.RoomAdvertisementDtos
 {
     public class RoomAdvertisementDto
     {
@@ -19,20 +19,9 @@ namespace RestaurantHotelAds.Application.DTOs
         public DateTime AssignedAt { get; set; }
     }
 
-    public class CreateRoomAdvertisementDto
-    {
-        public int AdRequestId { get; set; }
-        public int RoomId { get; set; }
-        public int DisplayOrder { get; set; } = 1;
-        public int DurationSeconds { get; set; } = 10;
-    }
+    
 
-    public class UpdateRoomAdvertisementDto
-    {
-        public int DisplayOrder { get; set; }
-        public int DurationSeconds { get; set; }
-        public bool IsActive { get; set; }
-    }
+    
 
     public class RoomAdvertisementFilterDto
     {

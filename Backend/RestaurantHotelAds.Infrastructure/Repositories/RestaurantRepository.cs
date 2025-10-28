@@ -10,39 +10,72 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Infrastructure.Repositories
 {
-    public class RestaurantRepository : IRestaurantRepository
+    public class RestaurantRepository : BaseRepository<Restaurant>, IRestaurantRepository
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
 
-        public RestaurantRepository(ApplicationDbContext context)
+        public RestaurantRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+            //_context = context;
         }
 
-        public async Task<IEnumerable<Restaurant>> GetAllByUserIdAsync(int userId)
+        public async Task<IEnumerable<Restaurant>> GetAllByUserIdAsync(Guid userId)
         {
             return await _context.Restaurants
-                .Where(r => r.UserId == userId)
+                .Include(r => r.Advertisements)
+                .Where(r => r.UserId == userId && !r.IsDeleted )
+                .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
         }
 
-        public async Task<Restaurant?> GetByIdAsync(int id)
+        public async Task<Restaurant?> GetByIdAndUserIdAsync(Guid id, Guid userId)
         {
-            return await _context.Restaurants.FindAsync(id);
+            return await _context.Restaurants
+                .Include(r => r.Advertisements)
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
         }
 
-        public async Task<Restaurant> AddAsync(Restaurant restaurant)
+        public async Task<bool> ExistsByNameAsync(Guid userId, string name)
         {
-            _context.Restaurants.Add(restaurant);
-            await _context.SaveChangesAsync();
-            return restaurant;
+            return await _context.Restaurants
+                .AnyAsync(r => r.UserId == userId && r.Name.ToLower() == name.ToLower());
         }
 
-        public async Task<Restaurant> UpdateAsync(Restaurant restaurant)
-        {
-            _context.Restaurants.Update(restaurant);
-            await _context.SaveChangesAsync();
-            return restaurant;
-        }
+        //public async Task<Restaurant?> GetByIdAsync(Guid id)
+        //{
+        //    return await _context.Restaurants.FindAsync(id);
+        //}
+
+        //public async Task<Restaurant> AddAsync(Restaurant restaurant)
+        //{
+        //    _context.Restaurants.Add(restaurant);
+        //    await _context.SaveChangesAsync();
+        //    return restaurant;
+        //}
+
+        //public async Task<Restaurant> UpdateAsync(Restaurant restaurant)
+        //{
+        //    _context.Restaurants.Update(restaurant);
+        //    await _context.SaveChangesAsync();
+        //    return restaurant;
+        //}
+
+        //public async Task<bool> DeleteAsync(Guid id)
+        //{
+        //    var restaurant = await _context.Restaurants.FindAsync(id);
+        //    if (restaurant == null) return false;
+
+        //    restaurant.IsDeleted = true;
+        //    restaurant.DeletedAt = DateTime.UtcNow;
+
+        //    //_context.Restaurants.Remove(restaurant);
+        //    await _context.SaveChangesAsync();
+        //    return true;
+        //}
+
+        //public async Task<bool> ExistsAsync(Guid id)
+        //{
+        //    return await _context.Restaurants.AnyAsync(r => r.Id == id && !r.IsDeleted);
+        //}
     }
 }

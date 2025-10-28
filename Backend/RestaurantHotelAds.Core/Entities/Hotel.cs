@@ -7,13 +7,8 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Entities
 {
-    public class Hotel
+    public class Hotel : BaseEntity
     {
-        public int Id { get; set; }
-
-        [Required]
-        public int UserId { get; set; }
-
         [Required]
         [StringLength(200)]
         public string Name { get; set; } = string.Empty;
@@ -33,14 +28,13 @@ namespace RestaurantHotelAds.Core.Entities
 
         public int TotalRooms { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public DateTime? UpdatedAt { get; set; }
-
         public bool IsActive { get; set; } = true;
+        
+        // Foreign Key to ApplicationUser
+        public Guid UserId { get; set; }
+        public virtual ApplicationUser User { get; set; } = null!;
 
         // Navigation properties
-        public virtual User User { get; set; } = null!;
         public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
         public virtual ICollection<AdRequest> AdRequests { get; set; } = new List<AdRequest>();
     }

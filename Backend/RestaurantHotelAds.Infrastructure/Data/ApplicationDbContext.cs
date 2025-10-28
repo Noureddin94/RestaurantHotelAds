@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RestaurantHotelAds.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -16,7 +18,6 @@ namespace RestaurantHotelAds.Infrastructure.Data
         }
 
         // DbSets - represent tables in the database
-        public DbSet<User> Users { get; set; }
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Advertisement> Advertisements { get; set; }
@@ -33,8 +34,8 @@ namespace RestaurantHotelAds.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure User Entity
-            modelBuilder.Entity<User>(entity =>
+            // Configure ApplicationUser Entity
+            modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => e.Email).IsUnique();
@@ -47,13 +48,58 @@ namespace RestaurantHotelAds.Infrastructure.Data
                 entity.HasKey(e => e.Id);
 
                 // One User can have Many Hotels
-                entity.HasOne(e => e.User)
-                    .WithMany()
-                    .HasForeignKey(e => e.UserId)
+                entity.HasOne(h => h.User)
+                    .WithMany(u => u.Hotels)
+                    .HasForeignKey(h => h.UserId)
                     .OnDelete(DeleteBehavior.Restrict); // Don't delete hotels when user is deleted
 
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
                 entity.HasIndex(e => e.UserId); // Index for faster queries
+            });
+
+            // Configure Restaurant Entity
+            modelBuilder.Entity<Restaurant>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                // One ApplicationUser can have Many Restaurants
+                entity.HasOne(r => r.User)
+                    .WithMany(u => u.Restaurants)
+                    .HasForeignKey(r => r.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Don't delete restaurants when user is deleted
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.HasIndex(e => e.UserId); // Index for faster queries
+            });
+
+            // Configure Advertisement Entity
+            modelBuilder.Entity<Advertisement>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                // One Restaurant can have Many Advertisements
+                entity.HasOne(e => e.Restaurant)
+                    .WithMany(r => r.Advertisements)
+                    .HasForeignKey(e => e.RestaurantId)
+                    .OnDelete(DeleteBehavior.Cascade); // Delete ads when restaurant is deleted
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            // Configure AdRequest Entity
+            modelBuilder.Entity<AdRequest>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                // One Advertisement can have many AdRequests
+                entity.HasOne(a => a.Advertisement)
+                    .WithMany(ad => ad.AdRequests)
+                    .HasForeignKey(a => a.AdvertisementId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // One Hotel can have many AdRequests
+                entity.HasOne(a => a.Hotel)
+                    .WithMany(h => h.AdRequests)
+                    .HasForeignKey(a => a.HotelId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             });
 
             // Configure Room Entity
@@ -87,7 +133,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
                 entity.HasOne(e => e.Room)
                     .WithMany(r => r.RoomAdvertisements)
                     .HasForeignKey(e => e.RoomId)
-                    .OnDelete(DeleteBehavior.NoAction); // prevent cascade cycle here ✅
+                    .OnDelete(DeleteBehavior.NoAction); // prevent cascade cycle here
 
                 entity.Property(e => e.AssignedAt).HasDefaultValueSql("GETUTCDATE()");
             });

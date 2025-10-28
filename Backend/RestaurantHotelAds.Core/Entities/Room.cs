@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Core.Entities
 {
-    public class Room
+    public class Room : BaseEntity
     {
-        public int Id { get; set; }
-
         [Required]
-        public int HotelId { get; set; }
+        public Guid HotelId { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -28,8 +26,6 @@ namespace RestaurantHotelAds.Core.Entities
         public string? DisplayDeviceId { get; set; }
 
         public bool IsActive { get; set; } = true;
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public virtual Hotel Hotel { get; set; } = null!;

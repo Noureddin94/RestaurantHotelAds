@@ -21,15 +21,22 @@ jobs:
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 8.0.x
 
       # Only restore for the backend solution
       - name: Restore dependencies
-        run: dotnet restore ./Backend/RestaurantHotelAds.sln
+        run: dotnet restore ./RestaurantHotelAds.sln
 
-      # Build only backend
+      # Install EF Core CLI tools globally
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef
+
+      # Add .NET global tools to PATH (important!)
+      - name: Add .NET tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
       - name: Build backend
-        run: dotnet build ./Backend/RestaurantHotelAds.sln --configuration Release --no-restore
+        run: dotnet build ./RestaurantHotelAds.sln --configuration Release --no-restore
 
       # Run backend tests
       - name: Run unit tests
@@ -40,4 +47,3 @@ jobs:
         run: |
           cd ./Backend/RestaurantHotelAds.Infrastructure
           dotnet ef migrations script --idempotent --output migrations_check.sql
-
