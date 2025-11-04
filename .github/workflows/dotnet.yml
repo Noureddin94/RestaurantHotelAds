@@ -35,15 +35,11 @@ jobs:
       - name: Add .NET tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Build backend
+      - name: Build backend (Debug)
         run: dotnet build ./RestaurantHotelAds.sln --configuration Release --no-restore
 
-      - name: Run unit tests with logger
-        run: dotnet test ./Backend/RestaurantHotelAds.Tests/RestaurantHotelAds.Tests.csproj --no-build --verbosity normal --logger "console;verbosity=detailed"
-
-      # Run backend tests
       - name: Run unit tests
-        run: dotnet test ./Backend/RestaurantHotelAds.Tests/RestaurantHotelAds.Tests.csproj --no-build --verbosity normal
+        run: dotnet test ./Backend/RestaurantHotelAds.Tests/RestaurantHotelAds.Tests.csproj --configuration Debug --no-build --verbosity normal --logger "console;verbosity=detailed"
 
       # (Optional) Verify database migrations can run
       - name: Verify EF Core migrations
