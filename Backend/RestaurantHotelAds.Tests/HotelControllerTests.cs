@@ -126,7 +126,13 @@ namespace RestaurantHotelAds.Tests
             var result = await _hotelController.GetHotelById(hotelId);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result);
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+
+            var responseJson = JsonSerializer.Serialize(notFoundResult.Value);
+            var responseObject = JsonSerializer.Deserialize<Dictionary<string, object>>(responseJson);
+
+            Assert.NotNull(responseObject);
+            Assert.Equal("Hotel not found or you don't have access to it", responseObject["message"]?.ToString());
         }
     }
 }
