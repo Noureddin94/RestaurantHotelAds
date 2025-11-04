@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace RestaurantHotelAds.Application.DTOs.AdvertisementDtos
 {
-    public class CreateAdvertisementDto
+    public class UpdateAdvertisementDto
     {
-        [Required]
         [StringLength(200)]
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; }
 
         [StringLength(1000)]
         public string? Description { get; set; }
@@ -20,12 +19,12 @@ namespace RestaurantHotelAds.Application.DTOs.AdvertisementDtos
         public string? MediaUrl { get; set; }
 
         [StringLength(50)]
-        public string MediaType { get; set; } = "Image";
+        public string? MediaType { get; set; }
 
-        [Required]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
-        [Required]
-        public DateTime EndDate { get; set; }
+        [StringLength(50)]
+        public string? Status { get; set; }
     }
 }

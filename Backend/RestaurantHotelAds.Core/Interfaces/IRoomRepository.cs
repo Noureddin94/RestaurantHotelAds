@@ -11,6 +11,8 @@ namespace RestaurantHotelAds.Core.Interfaces
     {
         Task<IEnumerable<Room>> GetByHotelIdAsync(Guid hotelId);
         Task<Room?> GetByIdWithHotelAsync(Guid id);
+        Task<Room?> GetByHotelIdAndRoomNumberAsync(Guid hotelId, string roomNumber);
+        Task<Room?> GetAllByHotelIdAndUserIdAsync(Guid hotelId, Guid userId);
         //Task<Room?> GetByIdAsync(Guid id);
         //Task<Room> AddAsync(Room room);
         //Task<Room> UpdateAsync(Room room);

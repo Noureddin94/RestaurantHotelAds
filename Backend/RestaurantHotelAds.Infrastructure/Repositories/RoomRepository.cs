@@ -34,6 +34,19 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
+        public async Task<Room?> GetAllByHotelIdAndUserIdAsync(Guid hotelId, Guid userId)
+        {
+            return await _context.Rooms
+                .Include(r => r.Hotel)
+                .FirstOrDefaultAsync(r => r.HotelId == hotelId && r.Hotel.UserId == userId);
+        }
+
+        public async Task<Room?> GetByHotelIdAndRoomNumberAsync(Guid hotelId, string roomNumber)
+        {
+            return await _context.Rooms
+                .FirstOrDefaultAsync(r => r.HotelId == hotelId && r.RoomNumber == roomNumber);
+        }
+
         //public async Task<Room> AddAsync(Room room)
         //{
         //    room.Id = Guid.NewGuid();

@@ -16,16 +16,22 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
 
         public RestaurantRepository(ApplicationDbContext context) : base(context)
         {
-            //_context = context;
         }
 
         public async Task<IEnumerable<Restaurant>> GetAllByUserIdAsync(Guid userId)
         {
             return await _context.Restaurants
                 .Include(r => r.Advertisements)
-                .Where(r => r.UserId == userId && !r.IsDeleted )
+                .Where(r => r.UserId == userId && !r.IsDeleted)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
+        }
+
+        public async Task<Restaurant?> GetByUserIdAsync(Guid userId)
+        {
+            return await _context.Restaurants
+                .Include(r => r.Advertisements)
+                .FirstOrDefaultAsync(r => r.UserId == userId && !r.IsDeleted);
         }
 
         public async Task<Restaurant?> GetByIdAndUserIdAsync(Guid id, Guid userId)

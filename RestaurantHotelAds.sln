@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantHotelAds.Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantHotelAds.API", "Backend\RestaurantHotelAds.API\RestaurantHotelAds.API.csproj", "{25CCA9F1-BC04-4EE5-BC32-CFFF806A8527}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantHotelAds.Tests", "Backend\RestaurantHotelAds.Tests\RestaurantHotelAds.Tests.csproj", "{8C233536-77D3-4D71-AC0A-E80663834E25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,18 @@ Global
 		{25CCA9F1-BC04-4EE5-BC32-CFFF806A8527}.Release|x64.Build.0 = Release|Any CPU
 		{25CCA9F1-BC04-4EE5-BC32-CFFF806A8527}.Release|x86.ActiveCfg = Release|Any CPU
 		{25CCA9F1-BC04-4EE5-BC32-CFFF806A8527}.Release|x86.Build.0 = Release|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Debug|x64.Build.0 = Debug|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Debug|x86.Build.0 = Debug|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Release|x64.ActiveCfg = Release|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Release|x64.Build.0 = Release|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Release|x86.ActiveCfg = Release|Any CPU
+		{8C233536-77D3-4D71-AC0A-E80663834E25}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,5 +94,9 @@ Global
 		{9357B1C9-C5C9-4F55-A068-79E7EA98E4E6} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
 		{D943655B-77F0-4D77-AD2C-F3105E58C966} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
 		{25CCA9F1-BC04-4EE5-BC32-CFFF806A8527} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
+		{8C233536-77D3-4D71-AC0A-E80663834E25} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5713D0B6-24F8-497B-A034-2461668E5E76}
 	EndGlobalSection
 EndGlobal

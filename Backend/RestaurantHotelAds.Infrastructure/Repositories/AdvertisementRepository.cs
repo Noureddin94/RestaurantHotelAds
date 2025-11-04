@@ -26,6 +26,24 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
         //        .OrderByDescending(a => a.CreatedAt)
         //        .ToListAsync();
         //}
+        public async Task<IEnumerable<Advertisement>> GetByUserIdAsync(Guid userId)
+        {
+            return await _context.Advertisements
+                .Include(a => a.Restaurant)
+                .Where(a => a.Restaurant.UserId == userId && !a.IsDeleted)
+                .ToListAsync();
+        }
+       
+        public async Task<IEnumerable<Advertisement>> GetByRestaurantOwnerIdAsync(Guid restaurantOwnerId)
+        {
+            // Fix: Restaurant does not have an OwnerId property.
+            // Use UserId instead, which links Restaurant to its owner (ApplicationUser).
+            return await _context.Advertisements
+                .Include(a => a.Restaurant)
+                .Where(a => a.Restaurant.UserId == restaurantOwnerId && !a.IsDeleted)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToListAsync();
+        }
 
         public async Task<IEnumerable<Advertisement>> GetByRestaurantIdAsync(Guid restaurantId)
         {
@@ -40,6 +58,15 @@ namespace RestaurantHotelAds.Infrastructure.Repositories
             return await _context.Advertisements
                 .Include(a => a.Restaurant)
                 .FirstOrDefaultAsync(a => a.Id == id && !a.IsDeleted);
+        }
+
+        public async Task<IEnumerable<Advertisement>> GetAllByUserIdAsync(Guid userId)
+        {
+            return await _context.Advertisements
+                .Include(a => a.Restaurant)
+                .Where(a => a.Restaurant.UserId == userId && !a.IsDeleted)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToListAsync();
         }
 
         //public async Task<Advertisement> AddAsync(Advertisement advertisement)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RestaurantHotelAds.Core.Entities;
@@ -23,7 +24,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
         private static readonly Guid HotelOwner1Id = new Guid("22222222-2222-2222-2222-222222222222");
         private static readonly Guid HotelOwner2Id = new Guid("33333333-3333-3333-3333-333333333333");
         private static readonly Guid RestaurantOwnerId = new Guid("44444444-4444-4444-4444-444444444444");
-        public static async Task SeedAsync(ApplicationDbContext context, ILogger logger)
+        public static async Task SeedAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger logger)
         {
             try
             {
@@ -31,7 +32,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
                 await context.Database.EnsureCreatedAsync();
 
                 // Seed Users (Admin & Test Users)
-                await SeedUsersAsync(context, logger);
+                await SeedUsersAsync(context, userManager, logger);
 
                 // Seed Hotels (Test Data)
                 await SeedHotelsAsync(context, logger);
@@ -57,7 +58,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
         /// <summary>
         /// Seed Admin and Test Users
         /// </summary>
-        private static async Task SeedUsersAsync(ApplicationDbContext context, ILogger logger)
+        private static async Task SeedUsersAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger logger)
         {
             if (await context.Users.AnyAsync())
             {
@@ -68,66 +69,83 @@ namespace RestaurantHotelAds.Infrastructure.Data
             logger.LogInformation("Seeding users...");
 
             // Create fixed GUIDs so relationships remain stable
-            var adminId = Guid.NewGuid();
-            var hotelOwner1Id = Guid.NewGuid();
-            var hotelOwner2Id = Guid.NewGuid();
-            var restaurantOwnerId = Guid.NewGuid();
-
-            var users = new List<ApplicationUser>
+            var usersToCreate = new List<(ApplicationUser user, string password, string role)>
+    {
+        (
+            new ApplicationUser
             {
-                // ADMIN USER (Fixed - Always ID 1)
-                new ApplicationUser
-                {
-                    Id = adminId,
-                    Email = "admin@restauranthotelads.com",
-                    PasswordHash = "AQAAAAEAACcQAAAAEBZp8qH9vZLq3F6xXKnZ8w==", // Password: Admin@123
-                    Role = Core.Enums.UserRole.Admin,
-                    FullName = "System Administrator",
-                    CreatedAt = SeedDate,
-                    IsActive = true
-                },
+                UserName = "admin@restauranthotelads.com",
+                Email = "admin@restauranthotelads.com",
+                FullName = "System Administrator",
+                Role = Core.Enums.UserRole.Admin,
+                CreatedAt = SeedDate,
+                IsActive = true
+            },
+            "Admin@123",
+            "Admin"
+        ),
+        (
+            new ApplicationUser
+            {
+                UserName = "hotelowner@test.com",
+                Email = "hotelowner@test.com",
+                FullName = "John Hotel Owner",
+                Role = Core.Enums.UserRole.HotelOwner,
+                CreatedAt = SeedDate,
+                IsActive = true
+            },
+            "Hotel@123",
+            "HotelOwner"
+        ),
+        (
+            new ApplicationUser
+            {
+                UserName = "jane.hotel@test.com",
+                Email = "jane.hotel@test.com",
+                FullName = "Jane Smith",
+                Role = Core.Enums.UserRole.HotelOwner,
+                CreatedAt = SeedDate,
+                IsActive = true
+            },
+            "Hotel@123",
+            "HotelOwner"
+        ),
+        (
+            new ApplicationUser
+            {
+                UserName = "restaurant@test.com",
+                Email = "restaurant@test.com",
+                FullName = "Mike Restaurant Owner",
+                Role = Core.Enums.UserRole.Restaurant,
+                CreatedAt = SeedDate,
+                IsActive = true
+            },
+            "Restaurant@123",
+            "Restaurant"
+        )
+    };
 
-                // HOTEL OWNER 1 (Fixed - Always ID 2)
-                new ApplicationUser
-                {
-                    Id = hotelOwner1Id,
-                    Email = "hotelowner@test.com",
-                    PasswordHash = "AQAAAAEAACcQAAAAEBZp8qH9vZLq3F6xXKnZ8w==", // Password: Hotel@123
-                    Role = Core.Enums.UserRole.HotelOwner,
-                    FullName = "John Hotel Owner",
-                    CreatedAt = SeedDate,
-                    IsActive = true
-                },
+            int createdCount = 0;
 
-                // HOTEL OWNER 2 (For testing multiple users)
-                new ApplicationUser
-                {
-                    Id = hotelOwner2Id,
-                    Email = "jane.hotel@test.com",
-                    PasswordHash = "AQAAAAEAACcQAAAAEBZp8qH9vZLq3F6xXKnZ8w==", // Password: Hotel@123
-                    Role = Core.Enums.UserRole.HotelOwner,
-                    FullName = "Jane Smith",
-                    CreatedAt = SeedDate,
-                    IsActive = true
-                },
+            foreach (var (user, password, role) in usersToCreate)
+            {
+                // Create user with password (Identity handles hashing)
+                var result = await userManager.CreateAsync(user, password);
 
-                // RESTAURANT OWNER (Fixed - Always ID 4)
-                new ApplicationUser
+                if (result.Succeeded)
                 {
-                    Id = restaurantOwnerId,
-                    Email = "restaurant@test.com",
-                    PasswordHash = "AQAAAAEAACcQAAAAEBZp8qH9vZLq3F6xXKnZ8w==", // Password: Restaurant@123
-                    Role = Core.Enums.UserRole.Restaurant,
-                    FullName = "Mike Restaurant Owner",
-                    CreatedAt = SeedDate,
-                    IsActive = true
+                    // Add user to role
+                    await userManager.AddToRoleAsync(user, role);
+                    createdCount++;
+                    logger.LogInformation($"Created user: {user.Email}");
                 }
-            };
+                else
+                {
+                    logger.LogError($"Failed to create user {user.Email}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                }
+            }
 
-            context.Users.AddRange(users);
-            await context.SaveChangesAsync();
-
-            logger.LogInformation($"Seeded {users.Count} users");
+            logger.LogInformation($"Seeded {createdCount} users");
             logger.LogInformation("Admin Email: admin@restauranthotelads.com | Password: Admin@123");
             logger.LogInformation("Hotel Owner: hotelowner@test.com | Password: Hotel@123");
             logger.LogInformation("Restaurant: restaurant@test.com | Password: Restaurant@123");
@@ -160,7 +178,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
             {
                 new Hotel
                 {
-                    Id = Guid.NewGuid(), 
+                    Id = Guid.NewGuid(),
                     UserId = hotelOwner1.Id, // John Hotel Owner
                     Name = "Grand Plaza Hotel",
                     Description = "Luxury 5-star hotel in the heart of downtown with stunning city views",
@@ -304,7 +322,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
                     }
                 }
             }
-            
+
 
             // Seaside Resort - Sample Rooms (Hotel ID 2)
             if (seasideResort != null)
@@ -328,7 +346,7 @@ namespace RestaurantHotelAds.Infrastructure.Data
 
             // Mountain View Lodge - Sample Rooms (Hotel ID 3)
             if (mountainView != null)
-            { 
+            {
                 for (int i = 1; i <= 15; i++)
                 {
                     rooms.Add(new Room
