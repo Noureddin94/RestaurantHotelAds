@@ -1,6 +1,32 @@
-@RestaurantHotelAds.API_HostAddress = http://localhost:5168
+@rootURL = http://localhost:5168
+@contentType = application/json
 
-GET {{RestaurantHotelAds.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Login to get token
+POST {{rootURL}}/api/Auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@test.nl",
+  "password": "Test@123"
+}
+
+### 2. Register a new user (if needed)
+POST {{rootURL}}/api/Auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test@test.nl",
+  "password": "Test@123",
+  "fullName": "Test User",
+  "role": "HotelOwner"
+}
+
+### 3. Test protected endpoint with token (replace YOUR_TOKEN)
+GET {{rootURL}}/api/Hotel
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDlkNDc2Mi0wNTk0LTQ3NWQtYzExNC0wOGRlMTY2YWQwN2QiLCJlbWFpbCI6InRlc3RAdGVzdC5ubCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiNzQ5ZDQ3NjItMDU5NC00NzVkLWMxMTQtMDhkZTE2NmFkMDdkIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InRlc3RAdGVzdC5ubCIsImV4cCI6MTc2MTY5OTE3NiwiaXNzIjoiUmVzdGF1cmFudEhvdGVsQWRzIiwiYXVkIjoiUmVzdGF1cmFudEhvdGVsQWRzQ2xpZW50In0.Rw4GaLW4bs9kl_Lh1OOyHQXOQNucZbjw43X1Hqw6V7A
+Content-Type: {{contentType}}
+
 
 ###
+GET {{rootURL}}/weatherforecast/
+Accept: application/json

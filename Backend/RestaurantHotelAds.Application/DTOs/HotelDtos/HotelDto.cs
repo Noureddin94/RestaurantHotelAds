@@ -9,7 +9,7 @@ namespace RestaurantHotelAds.Application.DTOs.HotelDtos
 {
     public class HotelDto
     {
-        public Guid Uuid { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
@@ -25,16 +25,4 @@ namespace RestaurantHotelAds.Application.DTOs.HotelDtos
         public int RoomsCount { get; set; }
         public int PendingAdsCount { get; set; }
     }
-
-    //public class DeleteHotelDto
-    //{
-    //    [Required(ErrorMessage = "Hotel ID is required")]
-    //    public int Id { get; set; }
-    //}
-
-    //public class HotelFilterDto
-    //{
-    //    public string? Name { get; set; }
-    //    public bool? IsActive { get; set; }
-    //}
 }

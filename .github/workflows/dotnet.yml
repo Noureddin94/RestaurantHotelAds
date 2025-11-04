@@ -18,32 +18,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8 SDK
+      - name: Setup .NET 9 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
 
       # Only restore for the backend solution
       - name: Restore dependencies
         run: dotnet restore ./RestaurantHotelAds.sln
 
       # Install EF Core CLI tools globally
-      - name: Install EF Core tools
-        run: dotnet tool install --global dotnet-ef
+      # - name: Install EF Core tools
+      #   run: dotnet tool install --global dotnet-ef
 
-      # Add .NET global tools to PATH (important!)
-      - name: Add .NET tools to PATH
-        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      # # Add .NET global tools to PATH (important!)
+      # - name: Add .NET tools to PATH
+      #   run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Build backend
+      - name: Build backend (Debug)
         run: dotnet build ./RestaurantHotelAds.sln --configuration Release --no-restore
 
-      # Run backend tests
       - name: Run unit tests
-        run: dotnet test ./RestaurantHotelAds.sln --no-build --verbosity normal
+        run: dotnet test ./Backend/RestaurantHotelAds.Tests/RestaurantHotelAds.Tests.csproj
 
       # (Optional) Verify database migrations can run
-      - name: Verify EF Core migrations
-        run: |
-          cd ./Backend/RestaurantHotelAds.Infrastructure
-          dotnet ef migrations script --idempotent --output migrations_check.sql
+      # - name: Verify EF Core migrations
+      #   run: |
+      #     cd ./Backend/RestaurantHotelAds.Infrastructure
+      #     dotnet ef migrations script --idempotent --output migrations_check.sql

@@ -1,4 +1,5 @@
-﻿using RestaurantHotelAds.Core.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using RestaurantHotelAds.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,13 @@ namespace RestaurantHotelAds.Core.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+        IApplicationUserRepository Users { get; }
         IHotelRepository Hotels { get; }
         IRoomRepository Rooms { get; }
         IRoomAdvertisementRepository RoomAdvertisements { get; }
         IAdRequestRepository AdRequests { get; }
         IRestaurantRepository Restaurants { get; }
+        IAdvertisementRepository Advertisements { get; }
         IRepository<T> GetRepository<T>() where T : BaseEntity;
 
         Task<int> SaveChangesAsync();

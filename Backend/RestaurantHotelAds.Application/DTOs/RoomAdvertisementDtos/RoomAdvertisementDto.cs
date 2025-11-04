@@ -8,8 +8,8 @@ namespace RestaurantHotelAds.Application.DTOs.RoomAdvertisementDtos
 {
     public class RoomAdvertisementDto
     {
-        public int Id { get; set; }
-        public int RoomId { get; set; }
+        public Guid Id { get; set; }
+        public Guid RoomId { get; set; }
         public string RoomNumber { get; set; } = string.Empty;
         public string AdTitle { get; set; } = string.Empty;
         public string? AdMediaUrl { get; set; }
@@ -19,13 +19,16 @@ namespace RestaurantHotelAds.Application.DTOs.RoomAdvertisementDtos
         public DateTime AssignedAt { get; set; }
     }
 
-    
 
-    
 
-    public class RoomAdvertisementFilterDto
-    {
-        public int? RoomId { get; set; }
-        public bool? IsActive { get; set; }
-    }
+
+    /// <summary>
+    /// For future use in filtering room advertisements
+    /// 
+
+    //public class RoomAdvertisementFilterDto
+    //{
+    //    public int? RoomId { get; set; }
+    //    public bool? IsActive { get; set; }
+    //}
 }
